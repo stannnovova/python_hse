@@ -1,10 +1,8 @@
 import secrets
 import string
-
 from msvcrt import getwch
 
 from password_manager import PasswordManager
-
 
 
 def masked_input(prompt):
@@ -39,23 +37,17 @@ def generate_password(length=20):
         string.ascii_lowercase,
         string.ascii_uppercase,
         string.digits,
-        "!@#$%^&*_-"
+        "!@#$%^&*_-",
     ]
 
     characters = [secrets.choice(group) for group in groups]
 
     alphabet = "".join(groups)
 
-    characters += [
-        secrets.choice(alphabet)
-        for _ in range(length - len(characters))
-    ]
+    characters += [secrets.choice(alphabet) for _ in range(length - len(characters))]
 
     secrets.SystemRandom().shuffle(characters)
     return "".join(characters)
-
-
-
 
 
 def run(mode=None):

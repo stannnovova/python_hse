@@ -1,6 +1,8 @@
+# описанное ниже относится только к лаб_1
 files: ^lab_1/
 
 repos:
+  # общие проверки файлов
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -12,3 +14,16 @@ repos:
       - id: check-ast
       - id: detect-private-key
       - id: check-added-large-files
+
+  # подключение ruff
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.4
+    hooks:
+      # линтер
+      - id: ruff-check
+        args: [--fix]
+        types_or: [python, pyi]
+
+      # форматтер
+      - id: ruff-format
+        types_or: [python, pyi]

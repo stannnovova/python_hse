@@ -1,4 +1,3 @@
-
 import hmac
 import json
 import os
@@ -18,7 +17,8 @@ from crypto_logic import (
 class PasswordManager:
     def __init__(self, file_path=None):
         self.file_path = (
-            Path(file_path) if file_path is not None
+            Path(file_path)
+            if file_path is not None
             else Path(__file__).resolve().parent / "data" / "vault.json"
         )
         self._data = self._load()
@@ -63,9 +63,7 @@ class PasswordManager:
             raise ValueError("хранилище уже инициализировано")
 
         if len(password) < 12:
-            raise ValueError(
-                "мастер-пароль должен содержать минимум 12 символов"
-            )
+            raise ValueError("мастер-пароль должен содержать минимум 12 символов")
 
         salt = secrets.token_bytes(16)
         verifier, key = derive_keys(password, salt)
@@ -75,9 +73,9 @@ class PasswordManager:
             "master": {
                 "salt": encode(salt),
                 "hash": encode(verifier),
-                "iterations": ITERATIONS
+                "iterations": ITERATIONS,
             },
-            "entries": {}
+            "entries": {},
         }
 
         self.entries = self._data["entries"]
@@ -90,9 +88,7 @@ class PasswordManager:
 
         master = self._data["master"]
         verifier, _ = derive_keys(
-            password,
-            decode(master["salt"]),
-            master["iterations"]
+            password, decode(master["salt"]), master["iterations"]
         )
 
         return hmac.compare_digest(verifier, decode(master["hash"]))
@@ -103,9 +99,7 @@ class PasswordManager:
 
         master = self._data["master"]
         verifier, key = derive_keys(
-            password,
-            decode(master["salt"]),
-            master["iterations"]
+            password, decode(master["salt"]), master["iterations"]
         )
 
         if not hmac.compare_digest(verifier, decode(master["hash"])):
