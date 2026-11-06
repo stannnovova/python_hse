@@ -1,11 +1,18 @@
 import secrets
 import string
-from msvcrt import getwch
+import sys
+from getpass import getpass
 
 from password_manager import PasswordManager
 
+if sys.platform == "win32":
+    from msvcrt import getwch
+
 
 def masked_input(prompt):
+    if sys.platform != "win32":
+        return getpass(prompt)
+
     print(prompt, end="", flush=True)
     password = ""
 
@@ -33,6 +40,8 @@ def masked_input(prompt):
 
 
 def generate_password(length=20):
+    if length < 4:
+        raise ValueError("длина пароля должна быть не менее 4 символов")
     groups = [
         string.ascii_lowercase,
         string.ascii_uppercase,
@@ -58,11 +67,17 @@ def run(mode=None):
     try:
         manager = PasswordManager()
     except (OSError, ValueError) as error:
-        print("Ошибка загрузки:", error)
+        print("ошибка загрузки:", error)
         return
 
-    if mode == "init":
-        password = masked_input("создайте мастер-пароль: ")
+    if mode == "init" and manager.is_initialized:
+        print("хранилище уже существует!")
+        return
+
+    if not manager.is_initialized:
+        print("первый запуск. создайте мастер-пароль.")
+
+        password = masked_input("мастер-пароль: ")
         confirm = masked_input("повторите мастер-пароль: ")
 
         if password != confirm:
@@ -71,22 +86,22 @@ def run(mode=None):
 
         try:
             manager.init_master(password)
-            print("мастер-пароль создан!")
+            print("мастер-пароль успешно создан!")
         except ValueError as error:
             print(error)
-        return
+            return
 
-    if not manager.is_initialized:
-        print("сначала выполните: python main.py --init")
-        return
+        if mode == "init":
+            return
 
-    password = masked_input("мастер-пароль: ")
+    else:
+        password = masked_input("мастер-пароль: ")
 
-    if not manager.unlock(password):
-        print("неверный мастер-пароль!")
-        return
+        if not manager.unlock(password):
+            print("неверный мастер-пароль!")
+            return
 
-    print("хранилище разблокировано!")
+        print("хранилище разблокировано!")
 
     while True:
         print("\n=== МЕНЕДЖЕР ПАРОЛЕЙ ===")

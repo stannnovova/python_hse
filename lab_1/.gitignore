@@ -17,3 +17,8 @@ data/*
 # тесты и линтеры
 .pytest_cache/
 .ruff_cache/
+
+# отчет о проценте покрытия кода тестами pytest-cov
+.coverage
+.coverage.*
+htmlcov/
