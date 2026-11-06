@@ -1,0 +1,13 @@
+[project]
+name = "password-manager"
+version = "0.1.0"
+description = "Console password manager"
+requires-python = ">=3.11"
+dependencies = [
+    "cryptography>=50.0.2",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.7.0",
+]

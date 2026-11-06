@@ -1,0 +1,19 @@
+# служебные файлы Python
+__pycache__/
+*.py[cod]
+
+# виртуальное окружение
+.venv/
+
+# хранилище паролей
+data/*
+!data/.gitkeep
+
+# секретные данные и переменные окружения
+.env
+.env.*
+!.env.example
+
+# тесты и линтеры
+.pytest_cache/
+.ruff_cache/
