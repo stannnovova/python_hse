@@ -128,7 +128,7 @@ def test_short_master_password(tmp_path: Path) -> None:
     ],
 )
 def test_empty_entry_fields(
-    manage: PasswordManager, name: str, login: str, password: str
+    manager: PasswordManager, name: str, login: str, password: str
 ) -> None:
     """Проверка того, что при вводе одно из полей будет пустым."""
     with pytest.raises(ValueError):
