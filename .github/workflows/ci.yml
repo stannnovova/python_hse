@@ -1,0 +1,41 @@
+name: Password Manager CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: windows-latest #msvcrt
+
+    defaults:
+      run:
+        working-directory: lab_1
+
+    steps:
+      - name: Проверка репозитория
+        uses: actions/checkout@v7
+
+      - name: Установка uv и Python
+        uses: astral-sh/setup-uv@v10
+        with:
+          python-version: "3.14"
+          working-directory: lab_1
+
+      - name: Установка зависимостей
+        run: uv sync --locked --dev
+
+      - name: Запуск тестов
+        run: uv run --locked python -m pytest -v
+
+      - name: Проверка стиля написания кода
+        run: uv run --locked ruff check password_logic main.py
+
+      - name: Проверка форматтера
+        run: uv run --locked ruff format --check password_logic main.py
+
+      - name: Проверка согласованности типов
+        run: uv run --locked mypy --strict password_logic main.py

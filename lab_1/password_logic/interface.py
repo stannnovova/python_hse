@@ -1,15 +1,18 @@
+"""Модуль описывает взаимодействие пользователя с программой."""
+
 import secrets
 import string
 import sys
 from getpass import getpass
 
-from password_manager import PasswordManager
+from .password_manager import PasswordManager
 
 if sys.platform == "win32":
     from msvcrt import getwch
 
 
-def masked_input(prompt):
+def masked_input(prompt: str) -> str:
+    """Принимает на вход введенный пароль, отображает его же под символом звездочки."""
     if sys.platform != "win32":
         return getpass(prompt)
 
@@ -19,27 +22,28 @@ def masked_input(prompt):
     while True:
         char = getwch()
 
-        if char == "\r":
+        if char == "\r":  # энтер сохранение
             print()
             return password
 
-        elif char == "\b":
+        elif char == "\b":  # удаление символа
             if password:
                 password = password[:-1]
                 print("\b \b", end="", flush=True)
 
-        elif char == "\x03":
+        elif char == "\x03":  # комнада прерывания
             raise KeyboardInterrupt
 
-        elif char in ("\x00", "\xe0"):
+        elif char in ("\x00", "\xe0"):  # стрелки влево вправл + служ клавишы
             getwch()
 
         elif char.isprintable():
             password += char
-            print("*", end="", flush=True)
+            print("✦", end="", flush=True)
 
 
-def generate_password(length=20):
+def generate_password(length: int = 15) -> str:
+    """Генерирует надежный пароль путем выборки случайных символов из 4 категорий, затем дополнения до указанной длины и перемешивания. Длина задается пользователем и не может быть меньше 4."""
     if length < 4:
         raise ValueError("длина пароля должна быть не менее 4 символов")
     groups = [
@@ -49,7 +53,7 @@ def generate_password(length=20):
         "!@#$%^&*_-",
     ]
 
-    characters = [secrets.choice(group) for group in groups]
+    characters = [secrets.choice(group) for group in groups]  # генератор списка
 
     alphabet = "".join(groups)
 
@@ -59,7 +63,8 @@ def generate_password(length=20):
     return "".join(characters)
 
 
-def run(mode=None):
+def run(mode: str | None = None) -> None:
+    """Выбор команд и действий в меню менеджера паролей."""
     if mode == "generate":
         print("сгенерированный пароль:", generate_password())
         return
@@ -104,7 +109,7 @@ def run(mode=None):
         print("хранилище разблокировано!")
 
     while True:
-        print("\n=== МЕНЕДЖЕР ПАРОЛЕЙ ===")
+        print("\n‧.°.⋆✮⋆.°.‧ МЕНЕДЖЕР ПАРОЛЕЙ ‧.°.⋆✮⋆.°.‧")
         print("1. Добавить запись")
         print("2. Посмотреть список")
         print("3. Получить запись")

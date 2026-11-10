@@ -1,12 +1,17 @@
-import sys
+"""Модуль отвечает за проверку защиты от повторной инициализации."""
 
-import interface
-from password_manager import PasswordManager
+import sys
+from pathlib import Path
+
+from pytest import MonkeyPatch
 
 import main
+from password_logic import interface
+from password_logic.password_manager import PasswordManager
 
 
-def test_repeated_interface_init(tmp_path, monkeypatch):
+def test_repeated_interface_init(tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
+    """Проверяет защиту от повторной инициализации хранилища."""
     storage = tmp_path / "vault.json"
     original_password = "OriginalMaster123!"
     new_password = "AnotherMaster123!"

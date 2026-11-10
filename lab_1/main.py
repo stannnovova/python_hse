@@ -1,9 +1,12 @@
+"""Модуль отвечает за запуск программы."""
+
 import argparse
 
-from interface import run
+from password_logic.interface import run
 
 
-def main():
+def main() -> None:
+    """Метод отвечает за консольное управление менеджером паролей при помощи argparse и стандартного управления выбором номера дейсвия."""
     parser = argparse.ArgumentParser(description="консольный менеджер паролей")
 
     group = parser.add_mutually_exclusive_group()
