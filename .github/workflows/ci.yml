@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Установка uv и Python
-        uses: astral-sh/setup-uv@v10
+        uses: astral-sh/setup-uv@v10.3.3
         with:
           python-version: "3.14"
           working-directory: lab_1
